@@ -102,10 +102,14 @@
         // includes checks so player can't go off the grid
         function keyDownFunction(event, currentPlayer, currentGrid){
             if(event.key === "ArrowDown"){
-                currentPlayer.moveDown();
-                currentGrid.drawGrid(currentPlayer.row, currentPlayer.column);
-                currentGrid.isVictory(currentPlayer.row, currentPlayer.column);
-                currentGrid.howCloseRow(currentPlayer.previousrow, currentPlayer.row)
+                if(currentPlayer.row !== currentGrid.length){
+                    currentPlayer.moveDown();
+                    currentGrid.drawGrid(currentPlayer.row, currentPlayer.column);
+                    currentGrid.isVictory(currentPlayer.row, currentPlayer.column);
+                    currentGrid.howCloseRow(currentPlayer.previousrow, currentPlayer.row);
+                }else{
+                    console.log("Out of Bounds! Try Again.");
+                }
             }
             if(event.key === "ArrowUp"){
 
