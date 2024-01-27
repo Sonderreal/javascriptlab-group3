@@ -21,8 +21,8 @@
                 this.length = length;
                 this.height = height;
                 // keeps track of a hidden goal position
-                this.goalrow = Math.random() * height;
-                this.goalcolumn = Math.random() * length;
+                this.goalrow = Math.floor(Math.random() * height);
+                this.goalcolumn = Math.floor(Math.random() * length);
             }
 
             drawGrid(row, column){
@@ -43,9 +43,11 @@
             // tells player if they've reached the goal
             isVictory(row, column){
                 if (this.goalrow == row && this.goalcolumn == column){
-                    return console.log("You won!")
+                    console.log("You won!")
+                    return true
                 }
-                return console.log("Not yet! But...")
+                console.log("Not yet! But...")
+                return false
             }
 
             // tells player how close they are to the hidden goal
@@ -105,8 +107,9 @@
                 if(currentPlayer.row !== currentGrid.length){
                     currentPlayer.moveDown();
                     currentGrid.drawGrid(currentPlayer.row, currentPlayer.column);
-                    currentGrid.isVictory(currentPlayer.row, currentPlayer.column);
-                    currentGrid.howCloseRow(currentPlayer.previousrow, currentPlayer.row);
+                    if (!(currentGrid.isVictory(currentPlayer.row, currentPlayer.column))){
+                        currentGrid.howCloseRow(currentPlayer.previousrow, currentPlayer.row);
+                    }
                 }else{
                     console.log("Out of Bounds! Try Again.");
                 }
@@ -115,8 +118,9 @@
                 if(currentPlayer.row !== 1){
                     currentPlayer.moveUp();
                     currentGrid.drawGrid(currentPlayer.row, currentPlayer.column);
-                    currentGrid.isVictory(currentPlayer.row, currentPlayer.column);
-                    currentGrid.howCloseRow(currentPlayer.previousrow, currentPlayer.row)
+                    if (!(currentGrid.isVictory(currentPlayer.row, currentPlayer.column))){
+                        currentGrid.howCloseRow(currentPlayer.previousrow, currentPlayer.row);
+                    }
                     }else{
                         console.log("Out of Bounds! Try Again.");
                     }
@@ -125,8 +129,9 @@
                 if (0 !== currentPlayer.column - 1){
                     currentPlayer.moveLeft();
                     currentGrid.drawGrid(currentPlayer.row, currentPlayer.column);
-                    currentGrid.isVictory(currentPlayer.row, currentPlayer.column);
-                    currentGrid.howCloseColumn(currentPlayer.previouscolumn, currentPlayer.column)
+                    if (!(currentGrid.isVictory(currentPlayer.row, currentPlayer.column))){
+                        currentGrid.howCloseRow(currentPlayer.previousrow, currentPlayer.row);
+                    }
                 }else{
                     console.log("Out of Bounds! Try Again.");
                 }
@@ -135,8 +140,9 @@
                 if (currentGrid.length !== currentPlayer.column){
                     currentPlayer.moveRight();
                     currentGrid.drawGrid(currentPlayer.row, currentPlayer.column);
-                    currentGrid.isVictory(currentPlayer.row, currentPlayer.column);
-                    currentGrid.howCloseColumn(currentPlayer.previouscolumn, currentPlayer.column)
+                    if (!(currentGrid.isVictory(currentPlayer.row, currentPlayer.column))){
+                        currentGrid.howCloseRow(currentPlayer.previousrow, currentPlayer.row);
+                    }
                     }else{
                         console.log("Out of Bounds! Try Again.")
                     }
