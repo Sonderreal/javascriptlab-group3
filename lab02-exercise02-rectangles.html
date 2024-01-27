@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>lab02-exercise02-rectangles</title>
+    </head>
+    <body>
+        <script type="text/javascript">
+        "use strict"
+        
+        class Rectangle {
+            constructor(length, height){
+                this.length = length;
+                this.height = height;
+            }
+            drawRectangle(){
+                let result = "";
+                for (let i = 0; i < this.height; i++) {
+                    if (i == 0 || i == this.height - 1) {
+                        result += "+".repeat(this.length) + "\n";
+                    } else {
+                        result += "+" + "-".repeat(this.length - 2) + "+\n";
+                    }
+                }
+                return console.log(result)
+            }
+        };
+
+        let mySquare = new Rectangle(5, 5);
+        mySquare.drawRectangle();
+        </script>
+    </body>
+</html>
