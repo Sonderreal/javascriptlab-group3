@@ -112,27 +112,35 @@
                 }
             }
             if(event.key === "ArrowUp"){
-
-                currentPlayer.moveUp();
-                currentGrid.drawGrid(currentPlayer.row, currentPlayer.column);
-                currentGrid.isVictory(currentPlayer.row, currentPlayer.column);
-                currentGrid.howCloseRow(currentPlayer.previousrow, currentPlayer.row)
+                if(currentPlayer.row !== 1){
+                    currentPlayer.moveUp();
+                    currentGrid.drawGrid(currentPlayer.row, currentPlayer.column);
+                    currentGrid.isVictory(currentPlayer.row, currentPlayer.column);
+                    currentGrid.howCloseRow(currentPlayer.previousrow, currentPlayer.row)
+                    }else{
+                        console.log("Out of Bounds! Try Again.");
+                    }
             }
             if(event.key === "ArrowLeft"){
                 if (0 !== currentPlayer.column - 1){
                     currentPlayer.moveLeft();
+                    currentGrid.drawGrid(currentPlayer.row, currentPlayer.column);
+                    currentGrid.isVictory(currentPlayer.row, currentPlayer.column);
+                    currentGrid.howCloseColumn(currentPlayer.previouscolumn, currentPlayer.column)
+                }else{
+                    console.log("Out of Bounds! Try Again.");
                 }
-                currentGrid.drawGrid(currentPlayer.row, currentPlayer.column);
-                currentGrid.isVictory(currentPlayer.row, currentPlayer.column);
-                currentGrid.howCloseColumn(currentPlayer.previouscolumn, currentPlayer.column)
             }
             if(event.key === "ArrowRight"){
-                if (currentGrid.length !== currentPlayer.column)
-                currentPlayer.moveRight();
-                currentGrid.drawGrid(currentPlayer.row, currentPlayer.column);
-                currentGrid.isVictory(currentPlayer.row, currentPlayer.column);
-                currentGrid.howCloseColumn(currentPlayer.previouscolumn, currentPlayer.column)
-            }
+                if (currentGrid.length !== currentPlayer.column){
+                    currentPlayer.moveRight();
+                    currentGrid.drawGrid(currentPlayer.row, currentPlayer.column);
+                    currentGrid.isVictory(currentPlayer.row, currentPlayer.column);
+                    currentGrid.howCloseColumn(currentPlayer.previouscolumn, currentPlayer.column)
+                    }else{
+                        console.log("Out of Bounds! Try Again.")
+                    }
+                }
         }
 
         document.addEventListener('keydown', function (event) {
