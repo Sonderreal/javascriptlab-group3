@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>lab02-exercise03-simpleRPG</title>
+    </head>
+    <body>
+        <script type="text/javascript">
+        "use strict"
+        // Modified to be guessing game towards hidden goal location
+        /* For testing using events to simulate pressing keys,
+           please use this format on the console: 
+           var event = new KeyboardEvent('keydown', {'key':'ArrowLeft'}); 
+           document.dispatchEvent(event);
+
+           #### Note that 'ArrowLeft' can be replaced with any of
+           the 3 other directional keys
+        */
+        class gameGrid {
+            constructor(length, height){
+                this.length = length;
+                this.height = height;
+                // keeps track of a hidden goal position
+                this.goalrow = Math.random() * height;
+                this.goalcolumn = Math.random() * length;
+            }
+
+            drawGrid(row, column){
+                this.grid = ""
+                for (let i = 0; i < this.height; i++) {
+                    for (let j = 0; j < this.length; j++){
+                        if (row - 1 == i && column - 1 == j){
+                            this.grid += "8";
+                        } else {
+                            this.grid += ","
+                        }
+                    }
+                    this.grid += "\n"
+                }
+                return console.log(this.grid)
+            }
+
+            // tells player if they've reached the goal
+            isVictory(row, column){
+                if (this.goalrow == row && this.goalcolumn == column){
+                    return console.log("You won!")
+                }
+                return console.log("Not yet! But...")
+            }
+
+            // tells player how close they are to the hidden goal
+            howCloseRow(prevrow, currentrow){
+                if (Math.abs(this.goalrow - prevrow) > Math.abs(this.goalrow - currentrow)){
+                    console.log("Hotter!");
+                } else {
+                    console.log("Colder!");
+                }
+            }
+
+            howCloseColumn(prevcolumn, currentcolumn){
+                if (Math.abs(this.goalcolumn - prevcolumn) > Math.abs(this.goalcolumn - currentcolumn)){
+                    console.log("Hotter!");
+                } else {
+                    console.log("Colder!");
+                }
+            }
+        }
+
+        class player{
+            constructor(row, column){
+                this.row = row;
+                this.column = column;
+                this.previousrow = null;
+                this.previouscolumn = null;
+            }
+            
+            moveUp(){
+                this.previousrow = this.row;
+                this.row--;
+            }
+            
+            moveDown(){
+                this.previousrow = this.row;
+                this.row++;
+            }
+            
+            moveRight(){
+                this.previouscolumn = this.column;
+                this.column++;
+            }
+            
+            moveLeft(){
+                this.previouscolumn = this.column;
+                this.column--;
+            }
+        }
+
+        const grid1 = new gameGrid(10,10);
+        const player1 = new player(10,10);
+        grid1.drawGrid(player1.row, player1.column);
+    
+        // includes checks so player can't go off the grid
+        function keyDownFunction(event, currentPlayer, currentGrid){
+            if(event.key === "ArrowDown"){
+                currentPlayer.moveDown();
+                currentGrid.drawGrid(currentPlayer.row, currentPlayer.column);
+                currentGrid.isVictory(currentPlayer.row, currentPlayer.column);
+                currentGrid.howCloseRow(currentPlayer.previousrow, currentPlayer.row)
+            }
+            if(event.key === "ArrowUp"){
+
+                currentPlayer.moveUp();
+                currentGrid.drawGrid(currentPlayer.row, currentPlayer.column);
+                currentGrid.isVictory(currentPlayer.row, currentPlayer.column);
+                currentGrid.howCloseRow(currentPlayer.previousrow, currentPlayer.row)
+            }
+            if(event.key === "ArrowLeft"){
+                if (0 !== currentPlayer.column - 1){
+                    currentPlayer.moveLeft();
+                }
+                currentGrid.drawGrid(currentPlayer.row, currentPlayer.column);
+                currentGrid.isVictory(currentPlayer.row, currentPlayer.column);
+                currentGrid.howCloseColumn(currentPlayer.previouscolumn, currentPlayer.column)
+            }
+            if(event.key === "ArrowRight"){
+                if (currentGrid.length !== currentPlayer.column)
+                currentPlayer.moveRight();
+                currentGrid.drawGrid(currentPlayer.row, currentPlayer.column);
+                currentGrid.isVictory(currentPlayer.row, currentPlayer.column);
+                currentGrid.howCloseColumn(currentPlayer.previouscolumn, currentPlayer.column)
+            }
+        }
+
+        document.addEventListener('keydown', function (event) {
+            keyDownFunction(event, player1, grid1);
+        });
+        </script>
+    </body>
+</html>
