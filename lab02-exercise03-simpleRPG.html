@@ -24,15 +24,23 @@
                 this.goalrow = Math.floor(Math.random() * height);
                 this.goalcolumn = Math.floor(Math.random() * length);
                 console.log("New game!");
+                //keeps track of obstacle position
+                this.obstaclerow = Math.floor(Math.random() * height);
+                this.obstaclecol = Math.floor(Math.random() * length);
+                
+            
             }
 
             drawGrid(row, column){
                 this.grid = ""
+                this.checkLocation()
                 for (let i = 0; i < this.height; i++) {
                     for (let j = 0; j < this.length; j++){
                         if (row - 1 == i && column - 1 == j){
                             this.grid += "8";
-                        } else {
+                        } else if(this.obstaclerow === i && this.obstaclecol === j) {
+                            this.grid += "O"
+                        }else{
                             this.grid += ","
                         }
                     }
@@ -48,7 +56,7 @@
                     this.refresh();
                     return true
                 }
-                console.log("Not yet! But...")
+                console.log("Not yet! But...");
                 return false
             }
 
@@ -74,6 +82,15 @@
                     location.reload();
                 }, 5000);
             }
+            //checks if the location of the obstacle and goal are the same
+            //generates a new location if they are
+            checkLocation(){
+                if (this.obstaclecol === this.goalcolumn || this.obstaclerow === this.goalrow){
+                    //create a new random value for the goal.
+                    this.obstaclerow = Math.floor(Math.random() * this.height);
+                    this.obstaclecol = Math.floor(Math.random() * this.length);
+                }
+            }
         }
 
         class player{
@@ -84,24 +101,40 @@
                 this.previouscolumn = null;
             }
             
-            moveUp(){
-                this.previousrow = this.row;
-                this.row--;
+            moveUp(currentGrid) {
+                if (this.row > 1 && !(this.row - 1 === currentGrid.obstaclerow && this.column === currentGrid.obstaclecol)) {
+                    this.previousrow = this.row;
+                    this.row--;
+                } else {
+                    console.log("Cannot move up! Try again.");
+                }
             }
-            
-            moveDown(){
-                this.previousrow = this.row;
-                this.row++;
+        
+            moveDown(currentGrid) {
+                if (this.row < currentGrid.height && !(this.row + 1 === currentGrid.obstaclerow && this.column === currentGrid.obstaclecol)) {
+                    this.previousrow = this.row;
+                    this.row++;
+                } else {
+                    console.log("Cannot move down! Try again.");
+                }
             }
-            
-            moveRight(){
-                this.previouscolumn = this.column;
-                this.column++;
+        
+            moveLeft(currentGrid) {
+                if (this.column > 1 && !(this.row === currentGrid.obstaclerow && this.column - 1 === currentGrid.obstaclecol)) {
+                    this.previouscolumn = this.column;
+                    this.column--;
+                } else {
+                    console.log("Cannot move left! Try again.");
+                }
             }
-            
-            moveLeft(){
-                this.previouscolumn = this.column;
-                this.column--;
+        
+            moveRight(currentGrid) {
+                if (this.column < currentGrid.length && !(this.row === currentGrid.obstaclerow && this.column + 1 === currentGrid.obstaclecol)) {
+                    this.previouscolumn = this.column;
+                    this.column++;
+                } else {
+                    console.log("Cannot move right! Try again.");
+                }
             }
         }
 
@@ -113,7 +146,7 @@
         function keyDownFunction(event, currentPlayer, currentGrid){
             if(event.key === "ArrowDown"){
                 if(currentPlayer.row !== currentGrid.height){
-                    currentPlayer.moveDown();
+                    currentPlayer.moveDown(grid1);
                     currentGrid.drawGrid(currentPlayer.row, currentPlayer.column);
                     if (!(currentGrid.isVictory(currentPlayer.row, currentPlayer.column))){
                         currentGrid.howCloseRow(currentPlayer.previousrow, currentPlayer.row);
@@ -124,7 +157,7 @@
             }
             if(event.key === "ArrowUp"){
                 if(currentPlayer.row !== 1){
-                    currentPlayer.moveUp();
+                    currentPlayer.moveUp(grid1);
                     currentGrid.drawGrid(currentPlayer.row, currentPlayer.column);
                     if (!(currentGrid.isVictory(currentPlayer.row, currentPlayer.column))){
                         currentGrid.howCloseRow(currentPlayer.previousrow, currentPlayer.row);
@@ -135,7 +168,7 @@
             }
             if(event.key === "ArrowLeft"){
                 if (0 !== currentPlayer.column - 1){
-                    currentPlayer.moveLeft();
+                    currentPlayer.moveLeft(grid1);
                     currentGrid.drawGrid(currentPlayer.row, currentPlayer.column);
                     if (!(currentGrid.isVictory(currentPlayer.row, currentPlayer.column))){
                         currentGrid.howCloseColumn(currentPlayer.previouscolumn, currentPlayer.column);
@@ -146,7 +179,7 @@
             }
             if(event.key === "ArrowRight"){
                 if (currentGrid.length !== currentPlayer.column){
-                    currentPlayer.moveRight();
+                    currentPlayer.moveRight(grid1);
                     currentGrid.drawGrid(currentPlayer.row, currentPlayer.column);
                     if (!(currentGrid.isVictory(currentPlayer.row, currentPlayer.column))){
                         currentGrid.howCloseColumn(currentPlayer.previouscolumn, currentPlayer.column);
