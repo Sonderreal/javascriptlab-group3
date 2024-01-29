@@ -29,15 +29,13 @@
                     this.obstaclerow = Math.floor(Math.random() * height);
                     this.obstaclecol = Math.floor(Math.random() * length);
                 } while (this.obstaclerow === this.goalrow && this.obstaclecol === this.goalcolumn);
-                
-            
             }
 
             drawGrid(row, column){
                 this.grid = ""
                 for (let i = 0; i < this.height; i++) {
                     for (let j = 0; j < this.length; j++){
-                        if (row - 1 == i && column - 1 == j){
+                        if (row - 1 === i && column - 1 === j){
                             this.grid += "8";
                         } else if(this.obstaclerow === i && this.obstaclecol === j) {
                             this.grid += "O"
@@ -132,34 +130,51 @@
         // includes checks so player can't go off the grid
         function keyDownFunction(event, currentPlayer, currentGrid){
             if(event.key === "ArrowDown"){
+                console.log(currentPlayer.row,currentGrid.obstaclerow);
+                console.log(currentPlayer.column,currentGrid.obstaclecol)
                 if(currentPlayer.row !== currentGrid.height){
-                    currentPlayer.moveDown();
-                    currentGrid.drawGrid(currentPlayer.row, currentPlayer.column);
-                    if (!(currentGrid.isVictory(currentPlayer.row, currentPlayer.column))){
-                        currentGrid.howCloseRow(currentPlayer.previousrow, currentPlayer.row);
-                    }
+                    if(currentPlayer.row === currentGrid.obstaclerow && currentPlayer.column === currentGrid.obstaclecol + 1){
+                        console.log("You cannot move onto an obstacle! Try again.")
+                        currentGrid.drawGrid(currentPlayer.row, currentPlayer.column);
+                    }else{
+                        currentPlayer.moveDown();
+                        currentGrid.drawGrid(currentPlayer.row, currentPlayer.column);
+                        if (!(currentGrid.isVictory(currentPlayer.row, currentPlayer.column))){
+                            currentGrid.howCloseRow(currentPlayer.previousrow, currentPlayer.row);
+                        }     
+                    }  
                 }else{
                     console.log("Out of Bounds! Try Again.");
                 }
             }
             if(event.key === "ArrowUp"){
                 if(currentPlayer.row !== 1){
-                    currentPlayer.moveUp();
-                    currentGrid.drawGrid(currentPlayer.row, currentPlayer.column);
-                    if (!(currentGrid.isVictory(currentPlayer.row, currentPlayer.column))){
-                        currentGrid.howCloseRow(currentPlayer.previousrow, currentPlayer.row);
-                    }
+                    if(currentPlayer.row === currentGrid.obstaclerow + 2 && currentPlayer.column === currentGrid.obstaclecol + 1){
+                        console.log("You cannot move onto an obstacle! Try again.")
+                        currentGrid.drawGrid(currentPlayer.row, currentPlayer.column);
                     }else{
-                        console.log("Out of Bounds! Try Again.");
-                    }
+                        currentPlayer.moveUp();
+                        currentGrid.drawGrid(currentPlayer.row, currentPlayer.column);
+                        if (!(currentGrid.isVictory(currentPlayer.row, currentPlayer.column))){
+                            currentGrid.howCloseRow(currentPlayer.previousrow, currentPlayer.row);
+                        }
+                    } 
+                }else{
+                    console.log("Out of Bounds! Try Again.");
+                }
             }
             if(event.key === "ArrowLeft"){
                 if (0 !== currentPlayer.column - 1){
-                    currentPlayer.moveLeft();
-                    currentGrid.drawGrid(currentPlayer.row, currentPlayer.column);
-                    if (!(currentGrid.isVictory(currentPlayer.row, currentPlayer.column))){
-                        currentGrid.howCloseColumn(currentPlayer.previouscolumn, currentPlayer.column);
-                    }
+                    if(currentPlayer.row != currentGrid.obstaclerow + 1 || currentPlayer.column != currentGrid.obstaclecol + 2){
+                        currentPlayer.moveLeft();
+                        currentGrid.drawGrid(currentPlayer.row, currentPlayer.column);
+                        if (!(currentGrid.isVictory(currentPlayer.row, currentPlayer.column))){
+                            currentGrid.howCloseColumn(currentPlayer.previouscolumn, currentPlayer.column);
+                        }
+                    }else{
+                        console.log("You cannot move onto an obstacle! Try again.")
+                        currentGrid.drawGrid(currentPlayer.row, currentPlayer.column);
+                    } 
                 }else{
                     console.log("Out of Bounds! Try Again.");
                 }
@@ -167,26 +182,25 @@
             if(event.key === "ArrowRight"){
                 if (currentGrid.length !== currentPlayer.column){ 
                     //if statement for obstacle
-               // if (currentPlayer.row === currentGrid.obstaclerow && currentGrid.obstaclecol !== currentPlayer.column )){
-                    currentPlayer.moveRight();
-                    currentGrid.drawGrid(currentPlayer.row, currentPlayer.column);
-                    if (!(currentGrid.isVictory(currentPlayer.row, currentPlayer.column))){
-                        currentGrid.howCloseColumn(currentPlayer.previouscolumn, currentPlayer.column);
-                    }
+                    if(currentPlayer.row === currentGrid.obstaclerow + 1 && currentPlayer.column === currentGrid.obstaclecol){
+                        console.log("You cannot move onto an obstacle! Try again.")
+                        currentGrid.drawGrid(currentPlayer.row, currentPlayer.column);
+                        
                     }else{
-                        console.log("You cannot move onto the obstacle! Try Again.")
-                    }
-                    /*if (currentPlayer.row === currentGrid.obstaclerow && currentPlayer.column === currentGrid.obstaclecol) {
-                        console.log("You cannot move onto the obstacle! Try again.");
-                    }
-                    */
+                        currentPlayer.moveRight();
+                        currentGrid.drawGrid(currentPlayer.row, currentPlayer.column);
+                        if (!(currentGrid.isVictory(currentPlayer.row, currentPlayer.column))){
+                            currentGrid.howCloseColumn(currentPlayer.previouscolumn, currentPlayer.column);
+                        }
+                    } 
+                }else{
+                    console.log("You cannot move onto the obstacle! Try Again.")
                 }
+            }
         }
 
         document.addEventListener('keydown', function (event) {
             keyDownFunction(event, player1, grid1);
-            //console.log(grid1.obstaclecol);
-            //console.log(grid1.obstaclerow);
         });
         </script>
     </body>
