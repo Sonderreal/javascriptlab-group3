@@ -25,15 +25,16 @@
                 this.goalcolumn = Math.floor(Math.random() * length);
                 console.log("New game!");
                 //keeps track of obstacle position
-                this.obstaclerow = Math.floor(Math.random() * height);
-                this.obstaclecol = Math.floor(Math.random() * length);
+                do {
+                    this.obstaclerow = Math.floor(Math.random() * height);
+                    this.obstaclecol = Math.floor(Math.random() * length);
+                } while (this.obstaclerow === this.goalrow && this.obstaclecol === this.goalcolumn);
                 
             
             }
 
             drawGrid(row, column){
                 this.grid = ""
-                this.checkLocation()
                 for (let i = 0; i < this.height; i++) {
                     for (let j = 0; j < this.length; j++){
                         if (row - 1 == i && column - 1 == j){
@@ -84,6 +85,7 @@
             }
             //checks if the location of the obstacle and goal are the same
             //generates a new location if they are
+            /*
             checkLocation(){
                 if (this.obstaclecol === this.goalcolumn || this.obstaclerow === this.goalrow){
                     //create a new random value for the goal.
@@ -91,6 +93,7 @@
                     this.obstaclecol = Math.floor(Math.random() * this.length);
                 }
             }
+            */
         }
 
         class player{
@@ -101,40 +104,24 @@
                 this.previouscolumn = null;
             }
             
-            moveUp(currentGrid) {
-                if (this.row > 1 && !(this.row - 1 === currentGrid.obstaclerow && this.column === currentGrid.obstaclecol)) {
-                    this.previousrow = this.row;
-                    this.row--;
-                } else {
-                    console.log("Cannot move up! Try again.");
-                }
+            moveUp(){
+                this.previousrow = this.row;
+                this.row--;
             }
-        
-            moveDown(currentGrid) {
-                if (this.row < currentGrid.height && !(this.row + 1 === currentGrid.obstaclerow && this.column === currentGrid.obstaclecol)) {
-                    this.previousrow = this.row;
-                    this.row++;
-                } else {
-                    console.log("Cannot move down! Try again.");
-                }
+            
+            moveDown(){
+                this.previousrow = this.row;
+                this.row++;
             }
-        
-            moveLeft(currentGrid) {
-                if (this.column > 1 && !(this.row === currentGrid.obstaclerow && this.column - 1 === currentGrid.obstaclecol)) {
-                    this.previouscolumn = this.column;
-                    this.column--;
-                } else {
-                    console.log("Cannot move left! Try again.");
-                }
+            
+            moveRight(){
+                this.previouscolumn = this.column;
+                this.column++;
             }
-        
-            moveRight(currentGrid) {
-                if (this.column < currentGrid.length && !(this.row === currentGrid.obstaclerow && this.column + 1 === currentGrid.obstaclecol)) {
-                    this.previouscolumn = this.column;
-                    this.column++;
-                } else {
-                    console.log("Cannot move right! Try again.");
-                }
+            
+            moveLeft(){
+                this.previouscolumn = this.column;
+                this.column--;
             }
         }
 
@@ -146,7 +133,7 @@
         function keyDownFunction(event, currentPlayer, currentGrid){
             if(event.key === "ArrowDown"){
                 if(currentPlayer.row !== currentGrid.height){
-                    currentPlayer.moveDown(grid1);
+                    currentPlayer.moveDown();
                     currentGrid.drawGrid(currentPlayer.row, currentPlayer.column);
                     if (!(currentGrid.isVictory(currentPlayer.row, currentPlayer.column))){
                         currentGrid.howCloseRow(currentPlayer.previousrow, currentPlayer.row);
@@ -157,7 +144,7 @@
             }
             if(event.key === "ArrowUp"){
                 if(currentPlayer.row !== 1){
-                    currentPlayer.moveUp(grid1);
+                    currentPlayer.moveUp();
                     currentGrid.drawGrid(currentPlayer.row, currentPlayer.column);
                     if (!(currentGrid.isVictory(currentPlayer.row, currentPlayer.column))){
                         currentGrid.howCloseRow(currentPlayer.previousrow, currentPlayer.row);
@@ -168,7 +155,7 @@
             }
             if(event.key === "ArrowLeft"){
                 if (0 !== currentPlayer.column - 1){
-                    currentPlayer.moveLeft(grid1);
+                    currentPlayer.moveLeft();
                     currentGrid.drawGrid(currentPlayer.row, currentPlayer.column);
                     if (!(currentGrid.isVictory(currentPlayer.row, currentPlayer.column))){
                         currentGrid.howCloseColumn(currentPlayer.previouscolumn, currentPlayer.column);
@@ -178,20 +165,28 @@
                 }
             }
             if(event.key === "ArrowRight"){
-                if (currentGrid.length !== currentPlayer.column){
-                    currentPlayer.moveRight(grid1);
+                if (currentGrid.length !== currentPlayer.column){ 
+                    //if statement for obstacle
+               // if (currentPlayer.row === currentGrid.obstaclerow && currentGrid.obstaclecol !== currentPlayer.column )){
+                    currentPlayer.moveRight();
                     currentGrid.drawGrid(currentPlayer.row, currentPlayer.column);
                     if (!(currentGrid.isVictory(currentPlayer.row, currentPlayer.column))){
                         currentGrid.howCloseColumn(currentPlayer.previouscolumn, currentPlayer.column);
                     }
                     }else{
-                        console.log("Out of Bounds! Try Again.")
+                        console.log("You cannot move onto the obstacle! Try Again.")
                     }
+                    /*if (currentPlayer.row === currentGrid.obstaclerow && currentPlayer.column === currentGrid.obstaclecol) {
+                        console.log("You cannot move onto the obstacle! Try again.");
+                    }
+                    */
                 }
         }
 
         document.addEventListener('keydown', function (event) {
             keyDownFunction(event, player1, grid1);
+            //console.log(grid1.obstaclecol);
+            //console.log(grid1.obstaclerow);
         });
         </script>
     </body>
